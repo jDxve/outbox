@@ -16,6 +16,21 @@ void main() {
 
   tearDown(() => connectivity.close());
 
+  // Polls instead of a fixed sleep so timing-based tests don't flake on a
+  // slower or more loaded CI runner.
+  Future<void> pumpUntil(
+    bool Function() condition, {
+    Duration timeout = const Duration(seconds: 5),
+  }) async {
+    final deadline = DateTime.now().add(timeout);
+    while (!condition()) {
+      if (DateTime.now().isAfter(deadline)) {
+        fail('Condition not met within $timeout');
+      }
+      await Future<void>.delayed(const Duration(milliseconds: 10));
+    }
+  }
+
   Future<Outbox> buildQueue({
     required TaskExecutor executor,
     RetryPolicy policy = const RetryPolicy(),
@@ -60,7 +75,7 @@ void main() {
     );
 
     await queue.add(action: 'a', payload: const {});
-    await Future<void>.delayed(const Duration(milliseconds: 200));
+    await pumpUntil(() => sent.contains('a'));
 
     expect(attempts, 3);
     expect(sent, ['a']);
@@ -83,7 +98,7 @@ void main() {
     );
 
     await queue.add(action: 'a', payload: const {});
-    await Future<void>.delayed(const Duration(milliseconds: 200));
+    await pumpUntil(() => attempts >= 3);
 
     expect(attempts, 3);
     expect(await queue.deadLetterCount(), 1);
