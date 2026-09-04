@@ -1,0 +1,23 @@
+name: outbox
+description: A durable, per-group ordered offline outbox for Flutter, backed by SQLite, with exponential backoff, idempotency keys and a dead letter queue.
+version: 0.1.0
+repository: https://github.com/jDxve/outbox
+issue_tracker: https://github.com/jDxve/outbox/issues
+
+environment:
+  sdk: ">=3.0.0 <4.0.0"
+  flutter: ">=3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  sqflite: ^2.3.0
+  path: ^1.9.0
+  connectivity_plus: ">=6.0.0 <8.0.0"
+  uuid: ">=4.0.0 <5.0.0"
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^4.0.0
+  sqflite_common_ffi: ^2.3.0
