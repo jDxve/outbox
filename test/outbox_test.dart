@@ -20,7 +20,7 @@ void main() {
   // slower or more loaded CI runner.
   Future<void> pumpUntil(
     bool Function() condition, {
-    Duration timeout = const Duration(seconds: 5),
+    Duration timeout = const Duration(seconds: 20),
   }) async {
     final deadline = DateTime.now().add(timeout);
     while (!condition()) {
