@@ -29,6 +29,9 @@ jobs:
         with:
           channel: stable
       - run: flutter pub get
-      - run: git diff -- analysis_options.yaml example/analysis_options.yaml
-      - run: git status
+      - run: |
+          echo "=== git status ==="
+          git status
+          echo "=== git diff (fails on purpose if non-empty, to surface it) ==="
+          git diff --exit-code -- analysis_options.yaml example/analysis_options.yaml
       - run: dart pub publish --dry-run
